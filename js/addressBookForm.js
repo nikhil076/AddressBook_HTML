@@ -1,4 +1,13 @@
 class AddressBookData {
+
+    get id() {
+        return this._id;
+    }
+
+    set id(id) {
+        this._id = id;
+    }
+
     get name() {
         return this._name;
     }
@@ -18,7 +27,7 @@ class AddressBookData {
     }
 
     set phoneNumber(phoneNumber) {
-        let phoneNumberRegex = RegExp('^([1-9]{1}[0-9]{9}|[9]{1}[1]{1}[1-9]{1}[0-9]{9}|/[+]{1}[9]{1}[1]{1}[1-9]{1}[0-9]{9})$');
+        let phoneNumberRegex = RegExp('^[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$');
         if (phoneNumberRegex.test(phoneNumber)) {
             this._phoneNumber = phoneNumber;
         }
@@ -72,6 +81,7 @@ const save = () => {
         let addressBookData = createaAddressBook();
         createAndUpdateStorage(addressBookData);
         resetForm();
+        window.location = "../pages/addressBookHome.html";
     } catch (e) {
         alert("Oops!!! There's an error ======> " + e);
         alert("Please correct the details & try again...!!!");
@@ -82,14 +92,14 @@ const save = () => {
 const createaAddressBook = () => {
     let addressBookData = new AddressBookData();
 
+    addressBookData.id = createNewAddressId();
     addressBookData.name = getInputValueById('#name');
     addressBookData.phoneNumber = getInputValueById('#phoneNumber');
     addressBookData.address = getInputValueById('#address');
     addressBookData.city = getInputValueById('#city');
     addressBookData.state = getInputValueById('#state');
     addressBookData.zip = getInputValueById('#zipCode');
-
-    alert("Object created successfully -----> " + addressBookData.toString());
+    alert("Object created successfully with id : " + addressBookData._id + " -----> " + addressBookData.toString());
     return addressBookData;
 }
 
@@ -104,9 +114,24 @@ function createAndUpdateStorage(addressBookData) {
     localStorage.setItem("AddressBookList", JSON.stringify(addressBookList));
 }
 
+const createNewAddressId = () => {
+    let addressID = localStorage.getItem("AddressID");
+    if (addressID == undefined) {
+        addressID = 0;
+    }
+    addressID = !addressID ? 1 : (parseInt(addressID) + 1).toString();
+    localStorage.setItem("AddressID", addressID);
+    return addressID;
+}
+
 const getInputValueById = (id) => {
     let value = document.querySelector(id).value;
     return value;
+}
+
+const setValue = (id, value) => {
+    const element = document.querySelector(id);
+    element.value = value;
 }
 
 const resetForm = () => {
@@ -133,14 +158,8 @@ const resetForm = () => {
     phoneNumberTextErrorNew.textContent = "";
 }
 
-const setValue = (id, value) => {
-    const element = document.querySelector(id);
-    element.value = value;
-}
-
 window.addEventListener('DOMContentLoaded', (event) => {
 
-    //event listener for name validation!!!!
     const name = document.querySelector('#name');
     const textError = document.querySelector('.text-error');
     const textErrorNew = document.querySelector('.text-error-new');
@@ -161,7 +180,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
-    //event listener for address validation!!!!
     const address = document.querySelector('#address');
     const addressTextError = document.querySelector('.address-text-error');
     const addressTextErrorNew = document.querySelector('.address-text-error-new');
@@ -182,7 +200,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
-    //event listener for phone number validation!!!!
     const phoneNumber = document.querySelector('#phoneNumber');
     const phoneNumberTextError = document.querySelector('.phoneNumber-text-error');
     const phoneNumberTextErrorNew = document.querySelector('.phoneNumber-text-error-new');
