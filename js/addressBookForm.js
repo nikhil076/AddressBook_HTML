@@ -30,7 +30,11 @@ class AddressBookData {
     }
 
     set address(address) {
-        this._address = address;
+        let addressRegex = RegExp('^[a-zA-Z0-9]{3,}\\s[a-zA-Z0-9]{3,}([ ]|[a-zA-Z0-9]{3,})*?$');
+        if (addressRegex.test(address)) {
+            this._address = address;
+        }
+        else throw 'Address is incorrect!';
     }
 
     get city() {
@@ -66,6 +70,7 @@ class AddressBookData {
 const save = () => {
     try {
         setAddressBookObject();
+        resetForm();
     } catch (e) {
         alert("Oops!!! There's an error ======> " + e);
         alert("Please correct the details & try again...!!!");
@@ -90,3 +95,98 @@ const getInputValueById = (id) => {
     let value = document.querySelector(id).value;
     return value;
 }
+
+const resetForm = () => {
+    setValue('#name', '');
+    setValue('#phoneNumber', '');
+    setValue('#address', '');
+    setValue('#city', '');
+    setValue('#state', '');
+    setValue('#zipCode', '');
+
+    const textError = document.querySelector('.text-error');
+    const textErrorNew = document.querySelector('.text-error-new');
+    textError.textContent = "";
+    textErrorNew.textContent = "";
+
+    const addressTextError = document.querySelector('.address-text-error');
+    const addressTextErrorNew = document.querySelector('.address-text-error-new');
+    addressTextError.textContent = "";
+    addressTextErrorNew.textContent = "";
+
+    const phoneNumberTextError = document.querySelector('.phoneNumber-text-error');
+    const phoneNumberTextErrorNew = document.querySelector('.phoneNumber-text-error-new');
+    phoneNumberTextError.textContent = "";
+    phoneNumberTextErrorNew.textContent = "";
+}
+
+const setValue = (id, value) => {
+    const element = document.querySelector(id);
+    element.value = value;
+}
+
+window.addEventListener('DOMContentLoaded', (event) => {
+
+    //event listener for name validation!!!!
+    const name = document.querySelector('#name');
+    const textError = document.querySelector('.text-error');
+    const textErrorNew = document.querySelector('.text-error-new');
+
+    name.addEventListener('input', function () {
+        if (name.value.length == 0) {
+            textError.textContent = "";
+            return;
+        }
+
+        try {
+            (new AddressBookData()).name = name.value;
+            textError.textContent = "";
+            textErrorNew.textContent = "Fine!!";
+        } catch (e) {
+            textErrorNew.textContent = "";
+            textError.textContent = e;
+        }
+    });
+
+    //event listener for address validation!!!!
+    const address = document.querySelector('#address');
+    const addressTextError = document.querySelector('.address-text-error');
+    const addressTextErrorNew = document.querySelector('.address-text-error-new');
+
+    address.addEventListener('input', function () {
+        if (address.value.length == 0) {
+            addressTextError.textContent = "";
+            return;
+        }
+
+        try {
+            (new AddressBookData()).address = address.value;
+            addressTextError.textContent = "";
+            addressTextErrorNew.textContent = "Fine!!";
+        } catch (e) {
+            addressTextErrorNew.textContent = "";
+            addressTextError.textContent = e;
+        }
+    });
+
+    //event listener for phone number validation!!!!
+    const phoneNumber = document.querySelector('#phoneNumber');
+    const phoneNumberTextError = document.querySelector('.phoneNumber-text-error');
+    const phoneNumberTextErrorNew = document.querySelector('.phoneNumber-text-error-new');
+
+    phoneNumber.addEventListener('input', function () {
+        if (phoneNumber.value.length == 0) {
+            phoneNumberTextError.textContent = "";
+            return;
+        }
+
+        try {
+            (new AddressBookData()).phoneNumber = phoneNumber.value;
+            phoneNumberTextError.textContent = "";
+            phoneNumberTextErrorNew.textContent = "Fine!!";
+        } catch (e) {
+            phoneNumberTextErrorNew.textContent = "";
+            phoneNumberTextError.textContent = e;
+        }
+    });
+});
