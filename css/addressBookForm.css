@@ -12,8 +12,10 @@ body{
 .header-content{
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
+    padding: 15px 50px; 
+    background-color: white;
     border: 0px solid green;
 }
 
@@ -27,6 +29,11 @@ body{
 
 .logo-content-img{
     margin-right: 8px;
+    border: solid 0px #42515f;
+}
+
+.logo-content-img-head{
+    margin-left: 140px;
     border: solid 0px #42515f;
 }
 
